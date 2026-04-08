@@ -1,1 +1,76 @@
+import random
 
+NB_NUMEROS = 5
+MIN_NUMERO = 1
+MAX_NUMERO = 49
+
+RECOMPENSES = {
+    5: "Jackpot 🎉",
+    4: "Très gros gain 💰",
+    3: "Gain moyen 💵",
+    2: "Petit gain 💲",
+    1: "Pas de gain",
+    0: "Pas de gain"
+}
+
+
+def generer_tirage():
+    """Génère une liste de numéros aléatoires sans doublons."""
+    return random.sample(range(MIN_NUMERO, MAX_NUMERO + 1), NB_NUMEROS)
+
+
+def demander_numeros_utilisateur():
+    """Demande à l'utilisateur de saisir ses numéros avec vérification."""
+    numeros = []
+
+    print(f"Entrez {NB_NUMEROS} numéros entre {MIN_NUMERO} et {MAX_NUMERO} :")
+
+    while len(numeros) < NB_NUMEROS:
+        try:
+            numero = int(input(f"Numéro {len(numeros) + 1} : "))
+
+            if numero < MIN_NUMERO or numero > MAX_NUMERO:
+                print("❌ Numéro hors limites.")
+            elif numero in numeros:
+                print("❌ Numéro déjà saisi.")
+            else:
+                numeros.append(numero)
+
+        except ValueError:
+            print("❌ Veuillez entrer un nombre valide.")
+
+    return numeros
+
+
+def comparer_numeros(numeros_joueur, numeros_tirage):
+    """Compare les numéros du joueur avec le tirage."""
+    return len(set(numeros_joueur) & set(numeros_tirage))
+
+
+def calculer_recompense(nb_bons_numeros):
+    """Retourne la récompense correspondante."""
+    return RECOMPENSES.get(nb_bons_numeros, "Pas de gain")
+
+
+def afficher_resultats(numeros_joueur, numeros_tirage, nb_bons_numeros, recompense):
+    """Affiche les résultats de manière claire."""
+    print("\n----- RÉSULTATS -----")
+    print("Vos numéros :", sorted(numeros_joueur))
+    print("Tirage :", sorted(numeros_tirage))
+    print(f"Nombre de bons numéros : {nb_bons_numeros}")
+    print("Récompense :", recompense)
+
+def main():
+    print("🎲 Bienvenue dans le Jeu de Loto 🎲")
+
+    numeros_joueur = demander_numeros_utilisateur()
+    numeros_tirage = generer_tirage()
+
+    nb_bons_numeros = comparer_numeros(numeros_joueur, numeros_tirage)
+    recompense = calculer_recompense(nb_bons_numeros)
+
+    afficher_resultats(numeros_joueur, numeros_tirage, nb_bons_numeros, recompense)
+
+
+if __name__ == "__main__":
+    main()
